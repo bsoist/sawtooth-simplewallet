@@ -15,31 +15,36 @@
 
 FROM ubuntu:bionic
 
-ARG DEBIAN_FRONTEND=noninteractive
+# ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
  && apt-get install gnupg -y
 
-RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci bionic universe" >> /etc/apt/sources.list \
- && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD \
- && echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/chime/stable bionic universe" >> /etc/apt/sources.list \
- && apt-get install -y -q --no-install-recommends \
+# RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci bionic universe" >> /etc/apt/sources.list \
+#  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD \
+#  && echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/chime/stable bionic universe" >> /etc/apt/sources.list \
+RUN apt-get install -y -q --no-install-recommends \
     apt-utils \
  && apt-get install -y -q \
     ca-certificates \
     build-essential \
-    python3-sawtooth-cli \
+   #  python3-sawtooth-cli \
     curl \
+    vim \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-    && apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_8.x >setup_8.x
+RUN sed 's/sleep 60//' setup_8.x >setup_node.sh 
+RUN sh setup_node.sh 
+RUN apt-get install -y nodejs
 
-WORKDIR /project/simplewallet/jsclient
+# WORKDIR /project/simplewallet/jsclient
 
-ENV PATH "$PATH:/project/simplewallet/jsclient"
+# ENV PATH "$PATH:/project/simplewallet/jsclient"
 
-EXPOSE 3000
+# EXPOSE 3000
 
-CMD npm install && npm start
+# CMD npm install && npm start
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
