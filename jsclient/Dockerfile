@@ -20,9 +20,6 @@ FROM ubuntu:bionic
 RUN apt-get update \
  && apt-get install gnupg -y
 
-# RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci bionic universe" >> /etc/apt/sources.list \
-#  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD \
-#  && echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/chime/stable bionic universe" >> /etc/apt/sources.list \
 RUN apt-get install -y -q --no-install-recommends \
     apt-utils \
  && apt-get install -y -q \
@@ -33,6 +30,16 @@ RUN apt-get install -y -q --no-install-recommends \
     vim \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+ && apt-get --allow-unauthenticated upgrade \
+   && apt-get install python3.7 \
+ && apt install python3.7-distutils
+
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+ && python3.7 get-pip.py
+
+RUN pip3.7 install sawtooth
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x >setup_8.x
 RUN sed 's/sleep 60//' setup_8.x >setup_node.sh 
