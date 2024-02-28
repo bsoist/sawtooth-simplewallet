@@ -32,9 +32,11 @@ RUN apt-get install -y -q --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
- && apt-get --allow-unauthenticated upgrade \
-   && apt-get install python3.7 \
- && apt install python3.7-distutils
+   && apt-get --allow-unauthenticated upgrade -y
+
+RUN apt-get install -y -q \
+   python3.7 \
+   python3.7-distutils
 
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
  && python3.7 get-pip.py
@@ -46,12 +48,12 @@ RUN sed 's/sleep 60//' setup_8.x >setup_node.sh
 RUN sh setup_node.sh 
 RUN apt-get install -y nodejs
 
-# WORKDIR /project/simplewallet/jsclient
+WORKDIR /project/simplewallet/jsclient
 
-# ENV PATH "$PATH:/project/simplewallet/jsclient"
+ENV PATH "$PATH:/project/simplewallet/jsclient"
 
-# EXPOSE 3000
+EXPOSE 3000
 
-# CMD npm install && npm start
+CMD npm install && npm start
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
