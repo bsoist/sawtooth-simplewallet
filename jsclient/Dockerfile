@@ -54,6 +54,6 @@ ENV PATH "$PATH:/project/simplewallet/jsclient"
 
 EXPOSE 3000
 
-CMD npm install && npm start
+# CMD npm install && npm start
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
